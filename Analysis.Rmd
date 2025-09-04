@@ -1,0 +1,49 @@
+---
+title: "Analysis"
+author: "Prajay Pandiri"
+date: "2025-09-02"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Reading in the csv:
+
+```{r}
+pollution = read.csv('ny_pollution.csv.gz')
+```
+
+## Graphs
+
+Boxplot of Pollution Data
+```{r}
+boxplot(pollution$pollution)
+```
+
+Calculating Percentage of Outliers
+```{r}
+x <- pollution$pollution   # or whichever column you plotted
+
+Q1  <- quantile(x, 0.25, na.rm = TRUE)
+Q3  <- quantile(x, 0.75, na.rm = TRUE)
+IQR <- Q3 - Q1
+
+# Outlier thresholds
+lower <- Q1 - 1.5 * IQR
+upper <- Q3 + 1.5 * IQR
+
+# Count outliers
+num_outliers = sum(x < lower | x > upper, na.rm = TRUE)
+total_points <- sum(!is.na(x))
+
+# percentage
+percent_outliers <- (num_outliers / total_points) * 100
+percent_outliers
+```
+## Statement
+
+The percentage of outliers in the pollution variable in the dataset is around 4.8%.
+
+Supporting Premise: Looking at the boxplot we can see a past of the data is part the 3rd Quartile. Then using the fact that data outside of the 1st and 3rd Quartile's are considered outliers on the boxplot, we can calculate the percentage of data points that are outliers by counting the number of outliers and divide it by the total amount of points in the pollution variable that are not NA. When doing so, we get the value 4.8%.
